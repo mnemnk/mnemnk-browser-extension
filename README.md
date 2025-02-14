@@ -6,11 +6,9 @@
   <h3 align="center">Mnemnk Browser Extension</h3>
 
   <p align="center">
-    Browser extension for Mnemnk to record your web navigating history.
+    Browser extension for Mnemnk to record your web browsing history.
   </p>
 </div>
-
-
 
 ## Settings
 
