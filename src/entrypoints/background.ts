@@ -99,13 +99,13 @@ export default defineBackground(() => {
     const server = `http://${address}`;
 
     const data = {
-      agent: "mnemnk-extension",
+      ch: "browser",
       kind: "browser",
       value: value,
     };
 
     const json_data = JSON.stringify(data);
-    return fetch(`${server}/store`, {
+    return fetch(`${server}/out`, {
       method: "POST",
       mode: "cors",
       headers: {
