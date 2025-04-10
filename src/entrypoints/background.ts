@@ -76,8 +76,6 @@ export default defineBackground(() => {
     }
     lastUrl = value.url;
 
-    console.log("sendData", value);
-
     if (address === undefined) {
       let addr = await storage.getItem<string>("local:address")
       address = addr ? addr : "";
@@ -90,13 +88,14 @@ export default defineBackground(() => {
     if (api_key === undefined || api_key === "") {
       let key = await storage.getItem<string>("local:api_key")
       api_key = key ? key : "";
-      if (!api_key) {
-        console.error("No token found");
-        return Promise.reject(new Error("No token found"));
-      }
     }
 
     const server = `http://${address}`;
+
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${api_key}`,
+    };
 
     const data = {
       ch: "browser",
@@ -105,13 +104,13 @@ export default defineBackground(() => {
     };
 
     const json_data = JSON.stringify(data);
+
+    // console.log("Sending data to server", { server, headers, json_data });
+
     return fetch(`${server}/out`, {
       method: "POST",
       mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${api_key}`,
-      },
+      headers: headers,
       body: json_data,
     });
   }
