@@ -19,7 +19,7 @@
 
 * [Node.js](https://nodejs.org/)
 * [Mnemnk App](https://github.com/mnemnk/mnemnk-app)
-* [Mnemnk Core Agents](https://github.com/mnemnk/mnemnk-core-agents)
+* [Mnemnk Lifelogging Agents](https://github.com/mnemnk/mnemnk-lifelogging-agents)
 
 ### Installation
 
