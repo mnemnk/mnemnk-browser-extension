@@ -36,14 +36,10 @@
 
    ```shell
    git clone https://github.com/mnemnk/mnemnk-browser-extension.git
-   ```
-2. (optional) Modify the code and debug.
-
-   ```shell
-   npm run dev
+   cd mnemnk-browser-extension
    ```
 
-3. Create a zip
+2. Build and generate a zip
 
    ```shell
    npm install
@@ -51,7 +47,7 @@
    npm run zip
    ```
 
-4. Open `.output/chrome-mv3/`. You can find `mnemnk-X.Y.Z-chrome.zip`.
+3. After completing the build process, open `.output/chrome-mv3/`. You can find the generated `mnemnk-X.Y.Z-chrome.zip` file here.
 
 </details>
 
