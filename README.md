@@ -1,16 +1,16 @@
 <div align="center">
-  <h3 align="center">Mnemnk Browser Extension</h3>
-
-![Badge Language] 
-[![Badge License]][License]
-
   <a href="https://github.com/mnemnk/mnemnk-browser-extension">
     <img src="https://github.com/mnemnk/mnemnk-browser-extension/blob/main/docs/assets/Logo.png?raw=true" alt="Logo" width="71" height="71">
   </a>
 
+  <h3 align="center">Mnemnk Browser Extension</h3>
+
   <p align="center">
     Browser extension for Mnemnk to record your web browsing history.
   </p>
+
+![Badge Language] 
+[![Badge License]][License]
 </div>
 
 ## Getting Started
