@@ -57,7 +57,7 @@ You can configure the `address` and `API key` from the extension's options.
 
 Make sure the settings match the API settings on the Settings page of the Mnemnk App (they are the same by default).
 
-![](/docs/assets/options.png)
+<img src="https://github.com/mnemnk/mnemnk-browser-extension/blob/main/docs/assets/options.png?raw=true" alt="options" width="60%">
 
 ## Acknowledgments
 
