@@ -23,8 +23,23 @@
 
 ### Installation
 
+1. Download `mnemnk-X.Y.Z-chrome.zip` from the release page.
+
+2. Open Chrome Extensions page [chrome://extensions/](chrome://extensions/), and turn on "Developer mode" at the top right corner.
+
+3. Drag and drop the downloaded `mnemnk-X.Y.Z-chrome.zip` onto the Chrome Extensions page.
+
+<details>
+  <summary><strong>Build from the repo</strong></summary>
 
 1. Clone the repo
+
+   ```shell
+   git clone https://github.com/mnemnk/mnemnk-browser-extension.git
+   cd mnemnk-browser-extension
+   ```
+
+2. Build and generate a zip
 
    ```shell
    npm install
@@ -32,10 +47,9 @@
    npm run zip
    ```
 
-2. Open Chrome Extensions page [chrome://extensions/](chrome://extensions/), and turn on "Developer mode" at the top right corner.
+3. After completing the build process, open `.output/chrome-mv3/`. You can find the generated `mnemnk-X.Y.Z-chrome.zip` file here.
 
-3. Drag and drop `.output/chrome-mv3/mnemnk-X.Y.Z-chrome.zip` onto the Chrome Extensions page.
-
+</details>
 
 ## Settings
 
