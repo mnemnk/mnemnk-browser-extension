@@ -26,3 +26,7 @@ function createStore<T>(value: T, storageKey: StorageItemKey) {
 
 export const address = createStore("localhost:3296", "local:address");
 export const api_key = createStore("", "local:api_key");
+export const excludeUrls = createStore<string[]>(
+  ["^(?!https?)", "^http://localhost"],
+  "local:excludeUrls"
+);

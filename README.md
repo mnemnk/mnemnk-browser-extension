@@ -43,6 +43,8 @@ You can configure the `address` and `API key` from the extension's options.
 
 Make sure the settings match the API settings on the Settings page of the Mnemnk App (they are the same by default).
 
+![](/docs/assets/options.png)
+
 ## Acknowledgments
 
 * [WXT](https://wxt.dev/)
