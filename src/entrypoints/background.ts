@@ -122,11 +122,12 @@ export default defineBackground(() => {
       if (!entry.url || isExcludeUrl(entry.url)) {
         return;
       }
+      let url = removeUtmParams(entry.url);
       let data = {
           t: entry.t,
-          url: removeUtmParams(entry.url),
+          url: url,
           title: entry.title,
-          text: entry.url + " " + entry.title,
+          text: url + " " + entry.title,
       }
       await sendData(data);
     });
