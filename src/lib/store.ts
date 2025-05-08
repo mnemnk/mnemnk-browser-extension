@@ -30,3 +30,9 @@ export const excludeUrls = createStore<string[]>(
   ["^(?!https?)", "^http://localhost"],
   "local:excludeUrls"
 );
+
+// custom action
+export const customActions = createStore<string[]>(
+  ["clip"],
+  "local:customActions"
+);

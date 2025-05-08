@@ -9,7 +9,10 @@ export default defineConfig({
     '@wxt-dev/auto-icons',
   ],
   manifest: {
-    permissions: ['storage', 'tabs'],
+    permissions: ['activeTab', 'scripting', 'storage', 'tabs',],
     host_permissions: ["*://*/*"],
+    action: {
+      default_popup: 'src/entrypoints/popup/index.html'
+    }
   },
 });

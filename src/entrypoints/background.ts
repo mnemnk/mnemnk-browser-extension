@@ -1,5 +1,5 @@
-import { storage } from "@wxt-dev/storage";
 import { debounceTime, Subject } from "rxjs";
+import { sendData, removeUtmParams, isExcludeUrl } from "@/lib/utils";
 
 type TabUpdatedEvent = {
   t: number
@@ -7,129 +7,63 @@ type TabUpdatedEvent = {
   url?: string
 };
 
-type SendData = {
-  t: number
-  title?: string
-  url?: string
-  text?: string
-};
-
 export default defineBackground(() => {
   // console.log('Start background!', { id: browser.runtime.id });
 
-  let excludeUrls: RegExp[] = [];
-  let excludeUrlsStorage = storage.defineItem<string[]>("local:excludeUrls", {
-      fallback: ["^(?!https?)", "^http://localhost"],
-  });
-  excludeUrlsStorage.getValue().then((value) => {
-    excludeUrls = value ? value.map((re) => new RegExp(re)) : [];
-  });
-  excludeUrlsStorage.watch((value) => {
-    excludeUrls = value ? value.map((re) => new RegExp(re)) : [];
-  });
-
-  let address = "";
-  let addressStorage = storage.defineItem<string>("local:address", {
-    fallback: "localhost:3296",
-  });
-  addressStorage.getValue().then((value) => {
-    address = value;
-  });
-  addressStorage.watch((value) => {
-    address = value ? value : "";
-  });
-
-  let api_key = "";
-  let apiKeyStorage = storage.defineItem<string>("local:api_key", {
-    fallback: "",
-  });
-  apiKeyStorage.getValue().then((value) => {
-    api_key = value
-  });
-  apiKeyStorage.watch((value) => {
-    api_key = value ? value : "";
-  });
-
-  function isExcludeUrl(url: string): boolean {
-    return excludeUrls.some((re) => re.test(url));
-  }
-
-  function removeUtmParams(url: string): string {
-    const urlObj = new URL(url);
-    const params = urlObj.searchParams;
-    const keys = Array.from(params.keys());
-    // remove all utm_* and fbclid params
-    for (const key of keys) {
-      if (key.startsWith("utm_") || key === "fbclid") {
-        params.delete(key);
-      }
-    }
-    return urlObj.toString();
-  }
-
   let lastUrl: string | undefined = "";
 
-  async function sendData(value: SendData): Promise<Response> {
-    if (lastUrl === value.url) {
-      // console.log("Skip sending data to server, already sent");
-      return Promise.resolve(new Response());
+  // Listen for messages from the popup or content script
+  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === "sendPageData") {
+      (async () => {
+        try {
+          const result = await sendData({
+            url: message.url,
+            title: message.title,
+            content: message.content,
+            action: message.customAction
+          });
+          
+          if (result.ok) {
+            sendResponse({ success: true, status: result.status });
+          } else {
+            sendResponse({ success: false, error: result.status });
+          }
+        } catch (error) {
+          console.error("Error sending data:", error);
+          sendResponse({ 
+            success: false, 
+            error: error.message || "Unknown error occurred" 
+          });
+        }
+      })();
+      
+      // Indicate that the response will be sent asynchronously
+      return true;
     }
-    lastUrl = value.url;
-
-    if (address === undefined) {
-      let addr = await storage.getItem<string>("local:address")
-      address = addr ? addr : "";
-      if (!address) {
-        console.error("No address found to send data to");
-        return Promise.reject(new Error("No address found to send data to"));
-      }
-    }
-
-    if (api_key === undefined || api_key === "") {
-      let key = await storage.getItem<string>("local:api_key")
-      api_key = key ? key : "";
-    }
-
-    const server = `http://${address}`;
-
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${api_key}`,
-    };
-
-    const data = {
-      ch: "browser",
-      kind: "browser",
-      value: value,
-    };
-
-    const json_data = JSON.stringify(data);
-
-    // console.log("Sending data to server", { server, headers, json_data });
-
-    return fetch(`${server}/out`, {
-      method: "POST",
-      mode: "cors",
-      headers: headers,
-      body: json_data,
-    });
-  }
+  });
 
   const tabUpdated$ = new Subject<TabUpdatedEvent>();
   tabUpdated$
     .pipe(debounceTime(500))
     .subscribe(async (entry: TabUpdatedEvent) => {
-      if (!entry.url || isExcludeUrl(entry.url)) {
+      if (!entry.url || await isExcludeUrl(entry.url)) {
         return;
       }
       let url = removeUtmParams(entry.url);
-      let data = {
-          t: entry.t,
+      if (lastUrl === url) {
+        return;
+      }
+      lastUrl = url;
+      
+      try {
+        await sendData({
           url: url,
           title: entry.title,
-          text: url + " " + entry.title,
+        });
+      } catch (error) {
+        console.error("Error in automatic tracking:", error);
       }
-      await sendData(data);
     });
 
   browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {

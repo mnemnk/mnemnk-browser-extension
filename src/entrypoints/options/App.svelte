@@ -1,9 +1,10 @@
 <script>
-  import { address, api_key, excludeUrls } from "@/lib/store";
+  import { address, api_key, excludeUrls, customActions } from "@/lib/store";
 
   import logo44 from "@/assets/logo44.png";
 
   let excludeUrlsText = $derived.by(() => $excludeUrls.join('\n'));
+  let customActionsText = $derived.by(() => $customActions.join('\n'));
   
   function saveExcludeUrls() {
     // Split by newlines and filter out empty lines
@@ -13,6 +14,16 @@
       .filter(url => url !== '');
     
     $excludeUrls = urls;
+  }
+  
+  function saveCustomActions() {
+    // Split by newlines and filter out empty lines
+    const actions = customActionsText
+      .split('\n')
+      .map(action => action.trim())
+      .filter(action => action !== '');
+    
+    $customActions = actions;
   }
 </script>
 
@@ -30,6 +41,23 @@
       <span>API key:</span>
       <input bind:value={$api_key} type="password" />
     </label>
+  </div>
+  
+  <div class="option-group">
+    <h2>Custom Actions</h2>
+    <p class="description">Define custom actions that will appear in the popup menu when you click the extension icon. Add one action per line.</p>
+
+    <div class="actions-editor">
+      <textarea 
+        bind:value={customActionsText}
+        placeholder="clip"
+        rows="6"
+      ></textarea>
+    </div>
+
+    <div class="button-row">
+      <button onclick={saveCustomActions} class="save-btn">Save Actions</button>
+    </div>
   </div>
 
   <div class="option-group">
@@ -56,6 +84,7 @@
   main {
     max-width: 800px;
     margin: 0 auto;
+    padding: 0 1rem;
   }
 
   h1 {
@@ -103,7 +132,7 @@
     font-size: 1rem;
   }
 
-  .exclude-urls-editor {
+  .exclude-urls-editor, .actions-editor {
     margin-bottom: 1rem;
   }
 
