@@ -19,6 +19,14 @@ export async function sendData(options: SendDataOptions): Promise<{status: strin
     "Authorization": `Bearer ${api_key}`,
   };
 
+  if (options.text && options.text.length > 512 * 1024) {
+    options.text = undefined;
+  }
+
+  if (options.content && options.content.length > 512 * 1024) {
+    options.content = undefined;
+  }
+
   const data = {
     ch: "browser",
     kind: "browser",
