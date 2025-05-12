@@ -8,6 +8,9 @@ export type SendDataOptions = {
   action?: string;
 };
 
+const MAX_TEXT_LENGTH = 512 * 1024; // 512 KB
+const MAX_CONTENT_LENGTH = 512 * 1024; // 512 KB
+
 export async function sendData(options: SendDataOptions): Promise<{status: string, ok: boolean}> {
   let address = await storage.getItem<string>("local:address") || "localhost:3296";
   let api_key = await storage.getItem<string>("local:api_key") || "";
@@ -19,12 +22,13 @@ export async function sendData(options: SendDataOptions): Promise<{status: strin
     "Authorization": `Bearer ${api_key}`,
   };
 
-  if (options.text && options.text.length > 512 * 1024) {
+  if (options.text && options.text.length > MAX_TEXT_LENGTH) {
     console.warn("Text data exceeded the maximum allowed length and was dropped.");
     options.text = undefined;
   }
 
-  if (options.content && options.content.length > 512 * 1024) {
+  if (options.content && options.content.length > MAX_CONTENT_LENGTH) {
+    console.warn("Content data exceeded the maximum allowed length and was dropped.");
     options.content = undefined;
   }
 
