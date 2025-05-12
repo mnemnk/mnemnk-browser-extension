@@ -20,6 +20,7 @@ export async function sendData(options: SendDataOptions): Promise<{status: strin
   };
 
   if (options.text && options.text.length > 512 * 1024) {
+    console.warn("Text data exceeded the maximum allowed length and was dropped.");
     options.text = undefined;
   }
 
